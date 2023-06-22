@@ -1,23 +1,27 @@
 import logo from './logo.svg';
 import './App.css';
+import MostrarDados from './Http';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div className="app">
+      <header>
+        <h1>API</h1>
       </header>
+      <main>
+
+        <input className="input" type="text" placeholder="Nome" />
+        <input className="input" type="email" placeholder="E-mail" />
+
+        <button className="button">Enviar</button>
+
+        <div className="result">
+          < MostrarDados/>
+        </div>
+      </main>
+      <footer>
+        <p>&copy; 2023 API. Todos os direitos reservados.</p>
+      </footer>
     </div>
   );
 }
