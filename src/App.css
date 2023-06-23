@@ -1,3 +1,7 @@
+body {
+  background: linear-gradient(to bottom, #ffffff, #f0f0f0);
+}
+
 .app {
   max-width: 800px;
   margin: 0 auto;
@@ -23,6 +27,10 @@ button.button {
   cursor: pointer;
 }
 
+ul {
+  list-style-type: none;
+}
+
 .name {
   font-size: 18px;
   font-weight: bold;
@@ -42,11 +50,25 @@ button.button {
 .success-message {
   color: green;
   font-weight: bold;
+  text-align: center;
+  border-radius: 8px;
+  background-color: #f2f2f2;
 }
 
 .error-message {
   color: red;
   font-weight: bold;
+  text-align: center;
+  border-radius: 8px;
+  background-color: #f2f2f2;
+}
+
+.comment-item {
+  /* Estilos personalizados para cada tópico de comentário */
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
 .edit-button, .delete-button {

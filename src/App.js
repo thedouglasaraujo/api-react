@@ -1,6 +1,5 @@
 import './App.css';
 import Comentarios from './Comentarios';
-import Formulario from './Formulario';
 
 function App() {
   return (

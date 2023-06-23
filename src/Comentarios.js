@@ -108,10 +108,10 @@ function Comentarios() {
   return (
     <div>
       <Formulario onCommentAdded={handleCommentAdded} />
-      <h2>Lista de Comentários:</h2>
+      <h2>Comentários</h2>
       <ul>
         {comments.slice(0, page * 10).map(comment => (
-          <li key={comment.id}>
+          <li key={comment.id} className="comment-item">
             <p className="name">{comment.name}</p>
             <p className="email">{comment.email}</p>
             <p className="message">{comment.body}</p>
