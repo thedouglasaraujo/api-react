@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="app">
       <header>
-        <h1>API</h1>
+        <h1>Fórum de Discussão</h1>
       </header>
       
       <main>
@@ -18,7 +18,7 @@ function App() {
         
       </main>
       <footer>
-        <p>&copy; 2023 API. Todos os direitos reservados.</p>
+        <p>&copy; Douglas Araújo, 2023. Todos os direitos reservados.</p>
       </footer>
     </div>
   );

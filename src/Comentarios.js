@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Formulario from './Formulario';
+import FormularioAtualizacao from './FormularioAtualizacao';
+import './App.css';
 
 function Comentarios() {
   const [comments, setComments] = useState([]);
-  const [perPage, setPerPage] = useState(10); // Número de itens por página
-  const [currentPage, setCurrentPage] = useState(1); // Página atual
+  const [commentForUpdate, setCommentForUpdate] = useState(null);
 
   useEffect(() => {
     fetchComments();
-  }, [currentPage]);
+  }, []);
 
   const fetchComments = () => {
     axios
-      .get(`https://jsonplaceholder.typicode.com/comments?_page=${currentPage}&_limit=${perPage}`)
+      .get('https://jsonplaceholder.typicode.com/comments')
       .then(response => {
-        setComments(prevComments => [...prevComments, ...response.data]);
+        setComments(response.data);
       })
       .catch(error => {
         console.error(error);
@@ -23,14 +24,17 @@ function Comentarios() {
   };
 
   const handleCommentAdded = (comment) => {
-    setComments(prevComments => [comment, ...prevComments]);
+    setComments((prevComments) => [
+      { ...comment, body: comment.message },
+      ...prevComments,
+    ]);
   };
 
   const handleUpdateComment = (commentId, updatedComment) => {
-    axios
+    return axios
       .put(`https://jsonplaceholder.typicode.com/comments/${commentId}`, updatedComment)
       .then(response => {
-        setComments(prevComments => {
+        setComments((prevComments) => {
           const updatedComments = prevComments.map(comment => {
             if (comment.id === commentId) {
               return response.data;
@@ -39,9 +43,11 @@ function Comentarios() {
           });
           return updatedComments;
         });
+        setCommentForUpdate(null);
       })
       .catch(error => {
         console.error(error);
+        throw error;
       });
   };
 
@@ -49,26 +55,20 @@ function Comentarios() {
     axios
       .delete(`https://jsonplaceholder.typicode.com/comments/${commentId}`)
       .then(() => {
-        setComments(prevComments => prevComments.filter(comment => comment.id !== commentId));
+        setComments((prevComments) => prevComments.filter(comment => comment.id !== commentId));
       })
       .catch(error => {
         console.error(error);
       });
   };
 
-  const handleScroll = () => {
-    const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-    if (scrollTop + clientHeight >= scrollHeight - 20) {
-      setCurrentPage(prevPage => prevPage + 1);
-    }
+  const handleEditComment = (comment) => {
+    setCommentForUpdate(comment);
   };
 
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+  const handleCancelEdit = () => {
+    setCommentForUpdate(null);
+  };
 
   return (
     <div>
@@ -77,20 +77,32 @@ function Comentarios() {
       <ul>
         {comments.map((comment) => (
           <li key={comment.id}>
-            <p>Nome: {comment.name}</p>
-            <p>Email: {comment.email}</p>
-            <p>{comment.body}</p>
-            <button onClick={() => handleUpdateComment(comment.id, { ...comment, body: 'Novo corpo do comentário' })}>
-              Atualizar
-            </button>
-            <button onClick={() => handleDeleteComment(comment.id)}>
-              Excluir
-            </button>
+            <p className='name'>{comment.name}</p>
+            <p className='email'>{comment.email}</p>
+            <p className='message'>{comment.body}</p>
+            {commentForUpdate && commentForUpdate.id === comment.id ? (
+              <FormularioAtualizacao comment={comment} onUpdateComment={handleUpdateComment} />
+            ) : (
+              <>
+                <button className="edit-button" onClick={() => handleEditComment(comment)}>Editar</button>
+                <button className="delete-button" onClick={() => handleDeleteComment(comment.id)}>Excluir</button>
+              </>
+            )}
           </li>
         ))}
       </ul>
+      {commentForUpdate && (
+        <div>
+          <h3>Editar Comentário</h3>
+          <p>Nome: {commentForUpdate.name}</p>
+          <p>Email: {commentForUpdate.email}</p>
+          <FormularioAtualizacao comment={commentForUpdate} onUpdateComment={handleUpdateComment} />
+          <button onClick={handleCancelEdit}>Cancelar</button>
+        </div>
+      )}
     </div>
   );
 }
 
 export default Comentarios;
+
