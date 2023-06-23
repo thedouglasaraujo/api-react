@@ -5,20 +5,20 @@ import FormularioAtualizacao from './FormularioAtualizacao';
 import './App.css';
 
 function Comentarios() {
-  const [comments, setComments] = useState([]);
-  const [commentForUpdate, setCommentForUpdate] = useState(null);
-  const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
+  const [comments, setComments] = useState([]); // Estado para armazenar os comentários
+  const [commentForUpdate, setCommentForUpdate] = useState(null); // Estado para armazenar o comentário selecionado para edição
+  const [page, setPage] = useState(1); // Estado para controlar a página atual dos comentários
+  const [isLoading, setIsLoading] = useState(false); // Estado para controlar o carregamento dos comentários adicionais
 
   useEffect(() => {
-    fetchComments();
+    fetchComments(); // Executa a função fetchComments() uma vez no momento da renderização inicial
   }, []);
 
   const fetchComments = () => {
     axios
       .get('https://jsonplaceholder.typicode.com/comments')
       .then(response => {
-        setComments(response.data);
+        setComments(response.data); // Atualiza o estado "comments" com os dados obtidos da API
       })
       .catch(error => {
         console.error(error);
@@ -29,7 +29,7 @@ function Comentarios() {
     setComments(prevComments => [
       { ...comment, body: comment.message },
       ...prevComments,
-    ]);
+    ]); // Adiciona um novo comentário ao estado "comments" com a mensagem renomeada para "body"
   };
 
   const handleUpdateComment = (commentId, updatedComment) => {
@@ -39,13 +39,13 @@ function Comentarios() {
         setComments(prevComments => {
           const updatedComments = prevComments.map(comment => {
             if (comment.id === commentId) {
-              return response.data;
+              return response.data; // Substitui o comentário atualizado no estado "comments"
             }
             return comment;
           });
           return updatedComments;
         });
-        setCommentForUpdate(null);
+        setCommentForUpdate(null); // Limpa o estado "commentForUpdate" após a atualização do comentário
       })
       .catch(error => {
         console.error(error);
@@ -59,7 +59,7 @@ function Comentarios() {
       .then(() => {
         setComments(prevComments =>
           prevComments.filter(comment => comment.id !== commentId)
-        );
+        ); // Remove o comentário do estado "comments"
       })
       .catch(error => {
         console.error(error);
@@ -67,11 +67,11 @@ function Comentarios() {
   };
 
   const handleEditComment = comment => {
-    setCommentForUpdate(comment);
+    setCommentForUpdate(comment); // Define o comentário selecionado para edição no estado "commentForUpdate"
   };
 
   const handleCancelEdit = () => {
-    setCommentForUpdate(null);
+    setCommentForUpdate(null); // Limpa o estado "commentForUpdate" para cancelar a edição do comentário
   };
 
   const fetchMoreComments = () => {
@@ -79,8 +79,8 @@ function Comentarios() {
     axios
       .get(`https://jsonplaceholder.typicode.com/comments?_page=${page + 1}`)
       .then(response => {
-        setComments(prevComments => [...prevComments, ...response.data]);
-        setPage(prevPage => prevPage + 1);
+        setComments(prevComments => [...prevComments, ...response.data]); // Adiciona mais comentários ao estado "comments"
+        setPage(prevPage => prevPage + 1); // Atualiza o número da página atual
         setIsLoading(false);
       })
       .catch(error => {
@@ -101,16 +101,16 @@ function Comentarios() {
       window.innerHeight + document.documentElement.scrollTop ===
       document.documentElement.offsetHeight
     ) {
-      fetchMoreComments();
+      fetchMoreComments(); // Carrega mais comentários quando o usuário rolar até o final da página
     }
   };
 
   return (
     <div>
-      <Formulario onCommentAdded={handleCommentAdded} />
+      <Formulario onCommentAdded={handleCommentAdded} /> {/* Componente para adicionar novos comentários */}
       <h2>Comentários</h2>
       <ul>
-        {comments.slice(0, page * 10).map(comment => (
+        {comments.slice(0, page * 10).map(comment => ( /* Renderiza os comentários com base na página atual */
           <li key={comment.id} className="comment-item">
             <p className="name">{comment.name}</p>
             <p className="email">{comment.email}</p>
@@ -119,7 +119,7 @@ function Comentarios() {
               <FormularioAtualizacao
                 comment={comment}
                 onUpdateComment={handleUpdateComment}
-              />
+              /> /* Renderiza o formulário de atualização se o comentário estiver sendo editado */
             ) : (
               <>
                 <button className="edit-button" onClick={() => handleEditComment(comment)}>
@@ -136,7 +136,7 @@ function Comentarios() {
           </li>
         ))}
       </ul>
-      {isLoading && <p>Carregando...</p>}
+      {isLoading && <p>Carregando...</p>} {/* Exibe uma mensagem de carregamento enquanto os comentários adicionais estão sendo buscados */}
       {commentForUpdate && (
         <div>
           <h3>Editar Comentário</h3>
@@ -145,7 +145,7 @@ function Comentarios() {
           <FormularioAtualizacao
             comment={commentForUpdate}
             onUpdateComment={handleUpdateComment}
-          />
+          /> {/* Renderiza o formulário de atualização para o comentário selecionado */}
           <button onClick={handleCancelEdit}>Cancelar</button>
         </div>
       )}
