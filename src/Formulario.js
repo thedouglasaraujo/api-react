@@ -23,6 +23,7 @@ function Formulario({ onCommentAdded }) {
         setSuccessMessage('Comentário realizado com sucesso');
         setName('');
         setEmail('');
+        setMessage('');
         onCommentAdded(response.data);
       })
       .catch(error => {
