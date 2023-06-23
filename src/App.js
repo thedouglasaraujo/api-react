@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import Comentarios from './Comentarios';
 import Formulario from './Formulario';
