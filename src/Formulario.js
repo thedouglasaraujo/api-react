@@ -1,31 +1,32 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-function UserForm() {
+function Formulario({ onCommentAdded }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [addedUser, setAddedUser] = useState(null);
 
   const handleSubmit = e => {
     e.preventDefault();
 
     const user = {
       name,
-      email
+      email,
+      message
     };
 
     axios
       .post('https://jsonplaceholder.typicode.com/users', user)
       .then(response => {
-        setSuccessMessage('Usuário criado com sucesso');
+        setSuccessMessage('Comentário realizado com sucesso');
         setName('');
         setEmail('');
-        setAddedUser(response.data);
+        onCommentAdded(response.data);
       })
       .catch(error => {
-        setErrorMessage('Erro ao criar usuário');
+        setErrorMessage('Erro ao realizar comentário');
         console.error(error);
       });
   };
@@ -35,27 +36,25 @@ function UserForm() {
       <form onSubmit={handleSubmit}>
         <label>
           Nome:
-          <input type="text" value={name} onChange={e => setName(e.target.value)} />
+          <input type="text" className="input" value={name} onChange={e => setName(e.target.value)} />
         </label>
         <br />
         <label>
           Email:
-          <input type="text" value={email} onChange={e => setEmail(e.target.value)} />
+          <input type="email" className="input" value={email} onChange={e => setEmail(e.target.value)} />
         </label>
         <br />
-        <button type="submit">Enviar</button>
+        <label>
+          Mensagem:
+          <input type="text" className="input" value={message} onChange={e => setMessage(e.target.value)} />
+        </label>
+        <br /> 
+        <button className="button" type="submit">Enviar</button>
       </form>
       {successMessage && <p>{successMessage}</p>}
       {errorMessage && <p>{errorMessage}</p>}
-      {addedUser && (
-        <div>
-          <h2>Item Adicionado:</h2>
-          <p>Nome: {addedUser.name}</p>
-          <p>Email: {addedUser.email}</p>
-        </div>
-      )}
     </div>
   );
 }
 
-export default UserForm;
+export default Formulario;
