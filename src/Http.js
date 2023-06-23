@@ -1,32 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function MostrarDados() {
-  const [data, setData] = useState([]);
-  const [error, setError] = useState(null);
+function Comments() {
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    axios
-      .get('https://reqres.in/api/users')
+    axios.get('https://jsonplaceholder.typicode.com/comments')
       .then(response => {
-        setData(response.data.data);
+        setComments(response.data);
       })
       .catch(error => {
-        setError(error.message);
+        console.error(error);
       });
   }, []);
 
   return (
     <div>
-      {data.length > 0 ? (
-        data.map(item => (
-          <div key={item.id}>{item.email}</div>
-        ))
-      ) : (
-        <div>Nenhum dado disponível</div>
-      )}
+      <h1>Comentários</h1>
+      {comments.map(comment => (
+        <div key={comment.id}>
+          <h3>{comment.name}</h3>
+          <p>{comment.email}</p>
+          <p>{comment.body}</p>
+        </div>
+      ))}
     </div>
   );
 }
 
-export default MostrarDados;
+export default Comments;

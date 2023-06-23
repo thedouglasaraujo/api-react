@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import MostrarDados from './Http';
+import UserForm from './UserForm';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <button className="button">Enviar</button>
 
         <div className="result">
+          < UserForm/>
           < MostrarDados/>
         </div>
       </main>
