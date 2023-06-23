@@ -8,25 +8,32 @@ function Formulario({ onCommentAdded }) {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Validar os campos do formulário
+    if (!name || !email || !message) {
+      setErrorMessage('Por favor, preencha todos os campos.');
+      return;
+    }
 
     const user = {
       name,
       email,
-      message
+      message,
     };
 
     axios
       .post('https://jsonplaceholder.typicode.com/users', user)
-      .then(response => {
+      .then((response) => {
         setSuccessMessage('Comentário realizado com sucesso');
         setName('');
         setEmail('');
         setMessage('');
         onCommentAdded(response.data);
+        setErrorMessage(''); // Limpar a mensagem de erro
       })
-      .catch(error => {
+      .catch((error) => {
         setErrorMessage('Erro ao realizar comentário');
         console.error(error);
       });
@@ -37,23 +44,23 @@ function Formulario({ onCommentAdded }) {
       <form onSubmit={handleSubmit}>
         <label>
           Nome:
-          <input type="text" className="input" value={name} onChange={e => setName(e.target.value)} />
+          <input type="text" className="input" value={name} onChange={(e) => setName(e.target.value)} />
         </label>
         <br />
         <label>
           Email:
-          <input type="email" className="input" value={email} onChange={e => setEmail(e.target.value)} />
+          <input type="email" className="input" value={email} onChange={(e) => setEmail(e.target.value)} />
         </label>
         <br />
         <label>
           Mensagem:
-          <input type="text" className="input" value={message} onChange={e => setMessage(e.target.value)} />
+          <input type="text" className="input" value={message} onChange={(e) => setMessage(e.target.value)} />
         </label>
-        <br /> 
+        <br />
         <button className="button" type="submit">Enviar</button>
       </form>
-      {successMessage && <p>{successMessage}</p>}
-      {errorMessage && <p>{errorMessage}</p>}
+      {successMessage && <p className="success-message">{successMessage}</p>}
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
     </div>
   );
 }
